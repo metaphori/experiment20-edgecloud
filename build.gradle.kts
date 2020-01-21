@@ -8,7 +8,7 @@ plugins {
     scala
     id("com.github.johnrengelman.shadow") version "4.0.3"
     idea
-    kotlin("jvm") version "1.3.50"
+    // kotlin("jvm") version "1.3.50"
 }
 
 repositories {
@@ -98,7 +98,8 @@ fun makeTest(
         maxHeap: Long? = null,
         taskSize: Int = 1024,
         threads: Int? = null,
-        debug: Boolean = false
+        debug: Boolean = false,
+        effects: String = ""
 ) {
     val heap: Long = maxHeap ?: if (System.getProperty("os.name").toLowerCase().contains("linux")) {
         ByteArrayOutputStream()
@@ -135,6 +136,7 @@ fun makeTest(
         File("data").mkdirs()
         args(
                 "-y", "src/main/yaml/${file}.yml",
+                "-g", "src/main/resources/${effects}.aes",
                 "-t", "$time",
                 "-e", "data/${today}-${name}",
                 "-p", threadCount,
@@ -151,6 +153,6 @@ fun makeTest(
     }*/
 }
 
-makeTest(name="hello", file = "hello_scafi", time = 100.0, vars = setOf("random"), taskSize = 2800)
+makeTest(name="hello", file = "spatial_tuples", time = 10000.0, vars = setOf(), taskSize = 2800, effects =  "spatial_tuples")
 
 defaultTasks("fatJar")
