@@ -153,6 +153,6 @@ fun makeTest(
     }*/
 }
 
-makeTest(name="hello", file = "spatial_tuples", time = 10000.0, vars = setOf(), taskSize = 2800, effects =  "spatial_tuples")
+makeTest(name="hello", file = "edgecloud", time = 10000.0, vars = setOf(), taskSize = 2800, effects =  "adhoccloud")
 
 defaultTasks("fatJar")

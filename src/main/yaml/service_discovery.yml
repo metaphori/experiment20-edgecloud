@@ -1,0 +1,162 @@
+incarnation: scafi
+
+variables:
+  seed: &seed
+    min: 0
+    max: 100
+    step: 1
+    default: 0
+  cloudcost: &cloudcost
+    type: GeometricVariable
+    parameters: [15, 0.4, 50, 10, 0]
+  taskFrequency: &taskFrequency
+    type: GeometricVariable
+    parameters: [0.005, 0.0001, 0.1, 9, 5]
+  taskPropagationTime: &taskPropagationTime
+    formula: 10
+  taskConclusionTime: &taskConclusionTime
+    formula: 100
+  serverCount: &serverCount
+    formula: 10
+  desktopCount: &desktopCount
+    formula: 25
+  socCount: &socCount
+    formula: 100
+  algorithm: &algorithm
+    type: ArbitraryVariable
+    parameters: [true, [false, true]]
+  hasServiceProbability: &hasServiceProbability
+    formula: 0.9
+
+export:
+  - time
+  - molecule: taskHops
+    aggregators: [mean]
+    value-filter: FilterNaN
+  - molecule: hasTask
+    aggregators: [sum]
+    value-filter: FilterNaN
+  - molecule: tasks
+    aggregators: [sum]
+    value-filter: FilterNaN
+  - molecule: completedTasks
+    aggregators: [sum]
+    value-filter: FilterNaN
+  - molecule: giveupTasks
+    aggregators: [sum]
+    value-filter: FilterNaN
+  - molecule: taskLatency
+    aggregators: [sum]
+    value-filter: FilterNaN
+
+seeds:
+  scenario: *seed
+  simulation: *seed
+
+network-model:
+  type: ConnectWithinDistance
+  parameters: [1.5]
+
+pools:
+  - pool: &program
+      - time-distribution: 1
+        type: Event
+        actions:
+          - type: RunScafiProgram
+            parameters: [it.unibo.casestudy.ServiceDiscovery] # second argument is retention time
+      - program: send
+  - pool: &taskGenerator
+      - time-distribution:
+          type: ExponentialTime
+          parameters: [*taskFrequency] # lambda (mean freq)
+        type: Event
+        actions:
+          - type: RunScafiProgram
+            parameters: [it.unibo.casestudy.TaskGenerator] # second argument is retention time
+displacements:
+  - in:
+      type: CircularArc
+      parameters: [*serverCount, 0, 0, 0.5]
+    contents:
+      - molecule: "algorithm"
+        concentration: *algorithm
+      - molecule: cloudcost
+        concentration: *cloudcost
+      - molecule: hasTask
+        concentration: false
+      - molecule: tasks
+        concentration: 0
+      - molecule: taskHops
+        concentration: Double.NaN
+      - molecule: completedTasks
+        concentration: 0
+      - molecule: giveupTasks
+        concentration: 0
+      - molecule: taskLatency
+        concentration: 0
+      - molecule: taskPropagationTime
+        concentration: *taskPropagationTime
+      - molecule: taskConclusionTime
+        concentration: *taskConclusionTime
+      - molecule: hasServiceProbability
+        concentration: *hasServiceProbability
+    programs:
+      - *program
+  - in:
+      type: CircularArc
+      parameters: [*desktopCount, 0, 0, 1.8]
+    contents:
+      - molecule: "algorithm"
+        concentration: *algorithm
+      - molecule: cloudcost
+        concentration: *cloudcost
+      - molecule: hasTask
+        concentration: false
+      - molecule: taskHops
+        concentration: Double.NaN
+      - molecule: tasks
+        concentration: 0
+      - molecule: completedTasks
+        concentration: 0
+      - molecule: giveupTasks
+        concentration: 0
+      - molecule: taskLatency
+        concentration: 0
+      - molecule: taskPropagationTime
+        concentration: *taskPropagationTime
+      - molecule: taskConclusionTime
+        concentration: *taskConclusionTime
+      - molecule: hasServiceProbability
+        concentration: *hasServiceProbability
+    programs:
+      - *program
+      - *taskGenerator
+  - in:
+      type: CircularArc
+      parameters: [*socCount, 0, 0, 3]
+    contents:
+      - molecule: "algorithm"
+        concentration: *algorithm
+      - molecule: cloudcost
+        concentration: *cloudcost
+      - molecule: hasTask
+        concentration: false
+      - molecule: taskHops
+        concentration: Double.NaN
+      - molecule: tasks
+        concentration: 0
+      - molecule: completedTasks
+        concentration: 0
+      - molecule: giveupTasks
+        concentration: 0
+      - molecule: taskLatency
+        concentration: 0
+      - molecule: taskPropagationTime
+        concentration: *taskPropagationTime
+      - molecule: taskConclusionTime
+        concentration: *taskConclusionTime
+      - molecule: hasServiceProbability
+        concentration: *hasServiceProbability
+    programs:
+      - *program
+      - *taskGenerator
