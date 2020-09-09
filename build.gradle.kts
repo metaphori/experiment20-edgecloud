@@ -15,9 +15,11 @@ repositories {
     mavenCentral()
 }
 
+val alchemistVersion = "9.3.0"
+
 dependencies {
-    implementation("it.unibo.alchemist:alchemist:9.2.1")
-    implementation("it.unibo.alchemist:alchemist-incarnation-scafi:9.2.1")
+    implementation("it.unibo.alchemist:alchemist:$alchemistVersion")
+    implementation("it.unibo.alchemist:alchemist-incarnation-scafi:$alchemistVersion")
     implementation("org.scala-lang:scala-library:2.12.2")
     implementation("it.unibo.apice.scafiteam:scafi-core_2.12:0.3.2")
 
@@ -153,6 +155,8 @@ fun makeTest(
     }*/
 }
 
-makeTest(name="hello", file = "edgecloud", time = 10000.0, vars = setOf(), taskSize = 2800, effects =  "adhoccloud")
+makeTest(name="hello", file = "edgecloud", time = 10000.0, vars = setOf(), taskSize = 2800, effects =  "edgecloud")
+makeTest(name="hello2", file = "service_discovery", time = 10000.0, vars = setOf(), taskSize = 2800, effects =  "service_discovery")
+makeTest(name="casestudy", file = "edgecloud", time = 500.0, vars = setOf("grain","random"), taskSize = 2800)
 
 defaultTasks("fatJar")

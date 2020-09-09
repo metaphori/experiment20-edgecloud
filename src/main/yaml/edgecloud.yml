@@ -1,9 +1,9 @@
 variables:
   random: &random
     min: 0
-    max: 29
+    max: 1
     step: 1
-    default: 2
+    default: 1
   commRadius: &commRadius
     min: 35
     max: 55
@@ -12,7 +12,7 @@ variables:
   grain: &grain
     min: 100.0
     max: 300.0
-    step: 100.0
+    step: 180.0
     default: 100.0 # mean size of areas
   batchFreq: &batchFreq
     formula: 10
@@ -25,14 +25,14 @@ variables:
   lowLoad: &lowLoad
     formula: 40.0
   moveSpeed: &moveSpeed
-    min: 0.00005 # km/h?
+    min: 0.00003 # km/h?
     max: 0.0001
     step: 0.00005
     default: 0.00003
   changeEveryMaxRounds: &changeEveryMaxRounds
     formula: 50
   leaderFailureProbability: &failureProb
-    min: 0.02
+    min: 0.005
     step: 0.01
     max: 0.025
     default: 0.005
@@ -142,6 +142,7 @@ pools:
       actions:
         - type: RunScafiProgram
           parameters: [it.unibo.casestudy.EdgeCloudEcosystem, 5]
+    - program: send
   - pool: &contents
     - molecule: grain
       concentration: *grain
@@ -168,9 +169,55 @@ pools:
       concentration: *gcTime
     - molecule: workerFailureProbsAlongTime
       concentration: *workerFailureProbsAlongTime
+    - molecule: leader
+      concentration: false
+    - molecule: candidate
+      concentration: false
+    - molecule: area
+      concentration: -1
+    - molecule: activeRequestCount
+      concentration: 0
+    - molecule: requestsReceived
+      concentration: 0
+    - molecule: requestsHandled
+      concentration: 0
+    - molecule: requestsUnhandled
+      concentration: 0
+    - molecule: requestsDeclined
+      concentration: 0
+    - molecule: requestsGarbage
+      concentration: 0
+    - molecule: requestsCompleted
+      concentration: 0
+    - molecule: areaLoad
+      concentration: 0
+    - molecule: areaUtilization
+      concentration: 0
+    - molecule: relayCommunicationLoad
+      concentration: 0
+    - molecule: meanWaitingTime
+      concentration: 0
+    - molecule: numLeaderFailures
+      concentration: 0
+    - molecule: numWorkerFailures
+      concentration: 0
+    - molecule: statFailedRequests
+      concentration: 0
+    - molecule: statAllocatedRequests
+      concentration: 0
+    - molecule: statActiveWorkers
+      concentration: 0
+    - molecule: statActiveConsumers
+      concentration: 0
   - pool: &fogContents
     - molecule: grain
       concentration: *grain
+    - molecule: leader
+      concentration: false
+    - molecule: candidate
+      concentration: false
+    - molecule: area
+      concentration: -1
     - molecule: role
       concentration: 8 # Fog nodes (potential leaders)
     #...........................
@@ -196,6 +243,46 @@ pools:
       concentration: *allocationStrategy
     - molecule: leaderFailureProbsAlongTime
       concentration: *leaderFailureProbsAlongTime
+    - molecule: leader
+      concentration: false
+    - molecule: candidate
+      concentration: false
+    - molecule: area
+      concentration: -1
+    - molecule: activeRequestCount
+      concentration: 0
+    - molecule: requestsReceived
+      concentration: 0
+    - molecule: requestsHandled
+      concentration: 0
+    - molecule: requestsUnhandled
+      concentration: 0
+    - molecule: requestsDeclined
+      concentration: 0
+    - molecule: requestsGarbage
+      concentration: 0
+    - molecule: requestsCompleted
+      concentration: 0
+    - molecule: areaLoad
+      concentration: 0
+    - molecule: areaUtilization
+      concentration: 0
+    - molecule: relayCommunicationLoad
+      concentration: 0
+    - molecule: meanWaitingTime
+      concentration: 0
+    - molecule: numLeaderFailures
+      concentration: 0
+    - molecule: numWorkerFailures
+      concentration: 0
+    - molecule: statFailedRequests
+      concentration: 0
+    - molecule: statAllocatedRequests
+      concentration: 0
+    - molecule: statActiveWorkers
+      concentration: 0
+    - molecule: statActiveConsumers
+      concentration: 0
   - pool: &consumerContents
     - molecule: grain
       concentration: *grain
@@ -224,6 +311,46 @@ pools:
       concentration: *requestProbabilitiesAlongTime
     - molecule: gcTime
       concentration: *gcTime
+    - molecule: leader
+      concentration: false
+    - molecule: candidate
+      concentration: false
+    - molecule: area
+      concentration: -1
+    - molecule: activeRequestCount
+      concentration: 0
+    - molecule: requestsReceived
+      concentration: 0
+    - molecule: requestsHandled
+      concentration: 0
+    - molecule: requestsUnhandled
+      concentration: 0
+    - molecule: requestsDeclined
+      concentration: 0
+    - molecule: requestsGarbage
+      concentration: 0
+    - molecule: requestsCompleted
+      concentration: 0
+    - molecule: areaLoad
+      concentration: 0
+    - molecule: areaUtilization
+      concentration: 0
+    - molecule: relayCommunicationLoad
+      concentration: 0
+    - molecule: meanWaitingTime
+      concentration: 0
+    - molecule: numLeaderFailures
+      concentration: 0
+    - molecule: numWorkerFailures
+      concentration: 0
+    - molecule: statFailedRequests
+      concentration: 0
+    - molecule: statAllocatedRequests
+      concentration: 0
+    - molecule: statActiveWorkers
+      concentration: 0
+    - molecule: statActiveConsumers
+      concentration: 0
   - pool: &move
     - time-distribution:
         type: ExponentialTime

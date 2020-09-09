@@ -211,7 +211,7 @@ print("Loading plot configurartion: " + str(plotconfig))
 def parse_sim_option(pc, option, default=None):
     opt = pc.get(option)
     if type(opt) is dict:
-        defval = opt[opt.keys()[-1]]
+        defval = opt[list(opt.keys())[-1]]
         opt = defaultdict(lambda: defval, opt)
     elif type(opt) is list:
         defval = opt[-1]
